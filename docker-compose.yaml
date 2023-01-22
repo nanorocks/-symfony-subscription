@@ -1,0 +1,55 @@
+version: '3.1'
+
+services:
+
+  app:
+    container_name: subscription
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile
+    image: 'app'
+    ports:
+      - 81:80
+    volumes:
+       - ./sub:/var/www/html
+    networks:
+      - sub
+
+  database:
+    container_name: db
+    platform: linux/x86_64
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+    networks:
+      - sub
+
+  adminer-client:
+    container_name: adminer-client
+    image: adminer
+    restart: always
+    environment:
+      ADMINER_DEFAULT_DB_DRIVER: mysql
+      ADMINER_DEFAULT_DB_HOST: database
+      ADMINER_DESIGN: haeckel
+      ADMINER_PLUGINS: tables-filter tinymce
+    ports:
+      - 54321:8080
+    networks:
+      - sub
+
+  mailhog:
+    container_name: fakemail
+    image: mailhog/mailhog:latest
+    restart: always
+    ports:
+      - 1026:1025
+      - 8026:8025
+    networks:
+      - sub
+
+networks:
+    sub:
+      driver: bridge      
