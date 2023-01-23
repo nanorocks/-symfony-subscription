@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello DashboardController!{% endblock %}
+
+{% block body %}
+{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+
+<div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <h5 class="card-title">{{ app . user . email }}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">
+            <form action="{{ path('app_logout') }}" method="get">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                <button type="submit" class="btn btn-secondary">logout</button>
+            </form>
+        </h6>
+        <p class="card-text">
+
+        <form action="{{ path('app_logout') }}" method="post">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('package') }}">
+            <select class="form-select" aria-label="Default select example">
+                <option selected>Pick montly package ...</option>
+                <option value="1">500 tokens</option>
+                <option value="2">1000 tokens</option>
+                <option value="3">1500 tokens</option>
+            </select>
+            <button type="submit" class="mt-2 btn btn-primary">Add</button>
+        </form>
+        </p>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
